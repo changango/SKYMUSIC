@@ -1,0 +1,58 @@
+{% extends 'myadmin/admin-base.html' %}
+
+{% block main_body %}
+<section>
+    <div>
+        <br>
+        <form action="{% url 'myadmin_singer_index' 1 %}" method="get">
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="key" placeholder="歌曲/歌手">
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-primary" type="submit">搜索</button>
+                </div>
+                <div class="col-md-2">
+                    <a class="btn btn-success" role="button" href="{% url 'myadmin_singer_add' %}">
+                        <span aria-hidden="true">添加歌手</span>
+                    </a>
+                </div>
+            </div>
+        </form>
+
+    </div><br>
+    <div class="row">
+        {% for vo in singerlist %}
+        <div class="col-sm-6 col-md-3">
+            <div class="thumbnail" style="border: 1px solid transparent !important;">
+                <a href="{% url 'myadmin_singerinfo' vo.singers_id %}" data-toggle="tooltip" data-placement="top" title="点击查看歌手信息">
+                    <img src="{{ vo.singerpicture }}" class="img-circle">
+                    <h3 class="text-center">{{ vo.singername }}</h3>
+                </a>
+                <div class="caption">
+                    <p class="text-center">
+                        <a href="{% url 'myadmin_singer_edit' vo.singers_id %}" class="btn btn-primary" role="button">
+                            编辑信息
+                        </a>
+                        <a href="{% url 'myadmin_singer_delete' vo.singers_id %}" class="btn btn-danger" role="button">
+                            删除歌手
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <ul class="pagination"  style="display:table;text-align:center;margin:0 auto;">
+            <li><a href="{% url 'myadmin_singer_index' pindex|add:-1 %}?{{mywhere|join:'&'}}">&laquo;</a></li>
+            {% for p in plist %}
+            <li {% if p == pindex %} class="active" {% endif %}>
+                <a href="{% url 'myadmin_singer_index' p %}?{{mywhere|join:'&'}}">{{p}}</a>
+            </li>
+            {% endfor %}
+            <li><a href="{% url 'myadmin_singer_index' pindex|add:1 %}?{{mywhere|join:'&'}}">&raquo;</a></li>
+        </ul>
+    </div>
+</section>
+{% endblock %}

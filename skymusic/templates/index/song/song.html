@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="order by dede58.com/"/>
+
+    <link rel="stylesheet" href="/static/css/reset.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css" type="text/css"/>
+    <script src="/static/bootstrap/js/jquery.min.js"></script>
+	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-container">
+        <div class="header-top">
+            <a href="{% url 'index' 1 %}" class="logo"></a>
+            <nav class="header-nav">
+                <ul>
+                    <li><a href="{% url 'index' 1 %}" class="header-nav__cur">音乐馆</a></li>
+                    <li><a href="{% url 'myuser' %}">我的音乐</a></li>
+                    {% if request.session.musicuser.musicsinger %}
+                        <li><a href="{% url 'musicsingerindex' request.session.musicuser.users_id %}">音乐人</a></li>
+                    {% endif %}
+                    {% if request.session.musicuser %}
+                        <li><a href="{% url 'friend' request.session.musicuser.users_id %}">好友</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <div class="header-search">
+                <form method="get" action="{% url 'search' %}">
+                    <input type="text" name="q" class="text" value="{{ query }}" placeholder="歌手/歌曲">
+                    <div class="btn"><button type="submit"><i class="icon-sprite"></i></button></div>
+                </form>
+            </div>
+            <div class="header-login">
+                <ul class="nav nav-pills">
+                    <li class="dropdown">
+                        {% if request.session.musicuser %}
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <h5>
+                                <svg viewBox="0 0 8 8"
+                                     width="8px"
+                                     height="8px">
+                                    <circle cx="4"
+                                            cy="4"
+                                            r="4"
+                                            fill="#00ff00"
+                                    ></circle>
+                                </svg>
+                                {{ request.session.musicuser.nickname }}<span class="caret"></span>
+                            </h5>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h5 class="text-center">{{ request.session.musicuser.username }}</h5></li>
+                            <li class="text-center"><img src="{{ request.session.musicuser.headprotrait }}" class="img-circle" width="70" height="70"></li>
+                            <li class="divider"></li>
+                            <li><a href="{% url 'useredit' request.session.musicuser.users_id %}"><h5>修改个人信息</h5></a></li>
+                            {% if request.session.musicuser.musicsinger %}
+                                <li><a href="{% url 'musicsingerinfo' request.session.musicuser.users_id %}"><h5>修改音乐人信息</h5></a></li>
+                            {% else %}
+                                <li><a href="{% url 'musicsinger' request.session.musicuser.users_id %}"><h5>成为音乐人</h5></a></li>
+                            {% endif %}
+                            <li><a href="{% url 'logout' %}"><h5>退出登录</h5></a></li>
+                        </ul>
+                        {% else %}
+                        <a class="dropdown-toggle" href="{% url 'login' %}">
+                            <h5>登录/注册</h5>
+                        </a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <ul class="header-subNav">
+            <li><a href="{% url 'index' 1 %}">首页</a></li>
+            <li><a href="{% url 'singer' 1 %}">歌手</a></li>
+            <li><a href="{% url 'song' 1 %}" class="subNav-cur">歌曲分类</a></li>
+            <li><a href="{% url 'rank' %}">排行榜</a></li>
+        </ul>
+    </div>
+</header>
+<!-- 歌曲分类 -->
+<div class="container" style="height:550px">
+    <div class="row">
+        <ul class="nav nav-pills nav-justified" style="background-color:#DCDCDC">
+            <li {% if songtype == '' %} class="active" {% endif %}><a href="{% url 'song' 1 %}">全部</a></li>
+            {% for i in ssort %}
+            <li {% if songtype == i.songsortname %} class="active" {% endif %}><a href="{% url 'song' 1 %}?type={{ i.songsortname }}">{{ i.songsortname }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="row">
+        <table class="table table-hover ">
+            <caption><h2>歌曲列表({{ number }}首)</h2></caption>
+            <thead>
+            <tr class="success">
+                <th width="50">序号</th>
+                <th>歌曲</th>
+                <th>歌手</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for i in song %}
+                <tr class="info">
+                    <td>{{ forloop.counter }}</td>
+                    <td><a href="{% url 'musicplayer' i.songs_id %}">{{ i.songname }}</a></td>
+                    <td><a href="{% url 'singerinfo' i.singerinfo.singers_id %}">{{ i.singername }}</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <br>
+        <ul class="pagination" style="display:table;text-align:center;margin:0 auto;">
+            <li><a href="{% url 'song' pindex|add:-1 %}?type={{ songtype }}">&laquo;</a></li>
+            {% for p in plist %}
+            <li {% if p == pindex %} class="active" {% endif %}>
+                <a href="{% url 'song' p %}?type={{ songtype }}">{{p}}</a>
+            </li>
+            {% endfor %}
+            <li><a href="{% url 'song' pindex|add:1 %}?type={{ songtype }}">&raquo;</a></li>
+        </ul><br>
+    </div>
+</div>
+
+<!-- footer -->
+<footer class="footer">
+    <div class="footer-inner">
+        <div class="footer-copyright">
+            <p>版权所有 SKY MUSIC</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

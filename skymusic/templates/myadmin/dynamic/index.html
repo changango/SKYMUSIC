@@ -1,0 +1,57 @@
+{% extends 'myadmin/dynamic/index-base.html' %}
+
+{% block main_body %}
+<div>
+    <form action="{% url 'myadmin_dynamic_index' 1 %}" method="get">
+        <div class="row">
+            <div class="col-md-3">
+                <input type="text" class="form-control" name="key" placeholder="歌名">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <table class="table table-bordered table-striped table-hover table-condensed">
+        <tr class="info">
+            <th>ID</th>
+            <th>歌名</th>
+            <th>播放次数</th>
+            <th>搜索次数</th>
+            <th>下载次数</th>
+            <th>操作</th>
+        </tr>
+        </tr>
+        {% for vo in dynamiclist %}
+        <tr class="active">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ vo.songname }}</td>
+            <td>{{ vo.plays }}</td>
+            <td>{{ vo.search }}</td>
+            <td>{{ vo.down }}</td>
+            <td>
+                <a type="button" href="{% url 'myadmin_dynamic_editrank' vo.dynamic_id %}"
+                   class="btn btn-primary btn-sm">
+                    <span class="" aria-hidden="true"></span> 编辑
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-8">
+            <ul class="pagination ">
+                <li><a href="{% url 'myadmin_dynamic_index' pindex|add:-1 %}?{{mywhere|join:'&'}}">&laquo;</a></li>
+                {% for p in plist %}
+                <li {% if p == pindex %} class="active" {% endif %}>
+                    <a href="{% url 'myadmin_dynamic_index' p %}?{{mywhere|join:'&'}}">{{p}}</a>
+                </li>
+                {% endfor %}
+                <li><a href="{% url 'myadmin_dynamic_index' pindex|add:1 %}?{{mywhere|join:'&'}}">&raquo;</a></li>
+            </ul>
+        </div>
+</div>
+{% endblock %}

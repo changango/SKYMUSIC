@@ -1,0 +1,42 @@
+{% extends 'index/newnav/newnav-base.html' %}
+
+{% block main_body %}
+<div class="main-inner">
+    <div class="main-title">
+        <h2 class="title" style="margin-top: -30px;"><i style="height:60px"></i></h2>
+        <span class="line line-left"></span>
+        <span class="line line-right"></span>
+    </div>
+    <div class="main-tab tab-title">
+        <a href="{% url 'new' 1 %}" class="item">最新</a>
+        <a href="{% url 'inland' 1 %}" class="item">内地</a>
+        <a href="{% url 'rthk' 1 %}" class="item">港台</a>
+        <a href="{% url 'europe' 1 %}" class="item">欧美</a>
+        <a href="{% url 'korea' 1 %}" class="item">韩国</a>
+        <a href="{% url 'japanese' 1 %}" class="item">日本</a>
+    </div>
+    <div class="main-slider tab-cont">
+        <ul class="slider-wrapper">
+            {% for i in song %}
+            <li>
+                <a target="musicplayer" href="{% url 'musicplayer' i.songs_id %}" class="img">
+                    <img src="{{ i.songpicture }}" alt="#">
+                    <span class="mask"></span>
+                    <i class="icon-play"></i>
+                </a>
+                <div class="info">
+                    <div class="title">
+                        <a target="musicplayer" href="{% url 'musicplayer' i.songs_id %}">{{ i.songname }}</a>
+                    </div>
+                    <a href="{% url 'singerinfo' i.singers_id %}" class="author">{{ i.singername }}</a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<div class="main-operate">
+    <a href="{% url 'japanese' pindex|add:-1 %}" class="slider-prev"><i class="icon-sprite"></i></a>
+    <a href="{% url 'japanese' pindex|add:1 %}" class="slider-next"><i class="icon-sprite"></i></a>
+</div>
+{% endblock %}

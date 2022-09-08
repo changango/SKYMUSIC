@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+{% load static from static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css" type="text/css"/>
+    <script src="/static/bootstrap/js/jquery.min.js"></script>
+	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div >
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4" align="center">
+                <h3><strong>SKYMUSIC后台管理系统</strong></h3>
+            </div>
+            <div class="col-md-2 col-md-offset-6">
+                <ul class="nav nav-pills">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <h4>{{ request.session.adminuser.nickname }}<span class="caret"></span></h4>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h5 class="text-center">{{ request.session.adminuser.username }}</h5></li>
+                            <li class="text-center"><img src="{{ request.session.adminuser.headprotrait }}" class="img-circle" width="70" height="70"></li>
+                            <li class="divider"></li>
+                            <li><a href="{% url 'myadmin_logout' %}">退出登录</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <ul class="nav nav-tabs">
+                    <li><a href="{% url 'myadmin_index' %}"><h4>主页</h4></a></li>
+                    <li><a href="{% url 'myadmin_user_index' 1 %}"><h4>用户管理</h4></a></li>
+                    <li><a href="{% url 'myadmin_song_index' 1 %}"><h4>歌曲管理</h4></a></li>
+                    <li><a href="{% url 'myadmin_singer_index' 1 %}"><h4>歌手管理</h4></a></li>
+                    <li><a href="{% url 'myadmin_dynamic_index' 1 %}"><h4>排行榜信息</h4></a></li>
+                    <li><a href="{% url 'myadmin_singerssort_index' 1 %}"><h4>歌手类别</h4></a></li>
+                    <li><a href="{% url 'myadmin_songssort_index' 1 %}"><h4>歌曲类别</h4></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container">
+            <section>
+                <div><br>
+                    <div class="col-md-2">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li><a href="{% url 'myadmin_dynamic_index' 1 %}"><h4>所有歌曲信息</h4></a></li>
+                            <li><a href="{% url 'myadmin_dynamic_playsrank' 1 %}"><h4>播放次数排行</h4></a></li>
+                            <li><a href="{% url 'myadmin_dynamic_searchrank' 1 %}"><h4>搜索次数排行</h4></a></li>
+                            <li><a href="{% url 'myadmin_dynamic_downrank' 1 %}"><h4>下载次数排行</h4></a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-10">
+                        {% block main_body %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+</body>
+</html>

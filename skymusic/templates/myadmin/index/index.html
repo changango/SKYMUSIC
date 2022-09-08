@@ -1,0 +1,10 @@
+{% extends 'myadmin/admin-base.html' %}
+
+{% block main_body %}
+<div class="container">
+    <div class="row">
+        <br><br><br><br>
+        <p class="lead text-center">欢迎 <b>{{ request.session.adminuser.nickname }}</b> 登录管理后台!</p>
+    </div>
+</div>
+{% endblock %}

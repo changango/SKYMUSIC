@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+{% load notifications_tags %}
+{% notifications_unread as unread_count %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="order by dede58.com/"/>
+
+    <link rel="stylesheet" href="/static/css/reset.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="/static/css/mystyle.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css" type="text/css"/>
+    <script src="/static/bootstrap/js/jquery.min.js"></script>
+	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+<header class="header">
+    <div class="header-container">
+        <div class="header-top">
+            <a href="{% url 'index' 1 %}" class="logo"></a>
+            <nav class="header-nav">
+                <ul>
+                    <li><a href="{% url 'index' 1 %}">音乐馆</a></li>
+                    <li><a href="{% url 'myuser' %}">我的音乐</a></li>
+                    {% if request.session.musicuser.musicsinger %}
+                        <li><a href="{% url 'musicsingerindex' request.session.musicuser.users_id %}">音乐人</a></li>
+                    {% endif %}
+                    {% if request.session.musicuser %}
+                        <li><a href="{% url 'friend' request.session.musicuser.users_id %}" class="header-nav__cur">好友</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <div class="header-search">
+                <form method="get" action="{% url 'usersearch' 1 %}">
+                    <input type="text" name="key" class="text" placeholder="搜索用户(账号/昵称)">
+                    <div class="btn"><button type="submit"><i class="icon-sprite"></i></button></div>
+                </form>
+            </div>
+            <div class="header-login">
+                <ul class="nav nav-pills">
+                    <li class="dropdown">
+                        {% if request.session.musicuser %}
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <h5>
+                                <svg viewBox="0 0 8 8"
+                                     width="8px"
+                                     height="8px">
+                                    <circle cx="4"
+                                            cy="4"
+                                            r="4"
+                                            fill="#00ff00"
+                                    ></circle>
+                                </svg>
+                                {{ request.session.musicuser.nickname }}<span class="caret"></span>
+                            </h5>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h5 class="text-center">{{ request.session.musicuser.username }}</h5></li>
+                            <li class="text-center"><img src="{{ request.session.musicuser.headprotrait }}" class="img-circle" width="70" height="70"></li>
+                            <li class="divider"></li>
+                            <li><a href="{% url 'useredit' request.session.musicuser.users_id %}"><h5>修改个人信息</h5></a></li>
+                            {% if request.session.musicuser.musicsinger %}
+                                <li><a href="{% url 'musicsingerinfo' request.session.musicuser.users_id %}"><h5>修改音乐人信息</h5></a></li>
+                            {% else %}
+                                <li><a href="{% url 'musicsinger' request.session.musicuser.users_id %}"><h5>成为音乐人</h5></a></li>
+                            {% endif %}
+                            <li><a href="{% url 'logout' %}"><h5>退出登录</h5></a></li>
+                        </ul>
+                        {% else %}
+                        <a class="dropdown-toggle" href="{% url 'login' %}">
+                            <h5>登录/注册</h5>
+                        </a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <ul class="header-subNav" style="padding-left: 450px;">
+            <li><a href="{% url 'friend' request.session.musicuser.users_id %}">我的好友</a></li>
+            <li><a href="{% url 'attention' request.session.musicuser.users_id %}" class="subNav-cur">我的关注</a></li>
+            <li><a href="{% url 'fans' request.session.musicuser.users_id %}">我的粉丝</a></li>
+        </ul>
+    </div>
+</header>
+<div class="container" style="height:530px">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div id="user-list" class="list-group">
+                <a href="" class="list-group-item disabled">
+                    <h4 class="list-group-item-heading text-center">关注列表</h4>
+                </a>
+                <div class="panel-group" id="accordion">
+                    {% for i in friend_list %}
+                    <div>
+                        <h4 class="panel-title">
+                            {% if i.friend_user1.username == request.session.musicuser.username %}
+                            <a class="list-group-item" data-toggle="collapse" data-parent="#accordion"
+                               href="#{{ i.friend_id }}" style="display:block;">
+                                <img class="img-circle" src="{{ i.friend_user2.headprotrait }}" width="50"
+                                     height="50">
+                                <span>{{ i.friend_user2.nickname }}</span>
+                            </a>
+                            {% else %}
+                            <a class="list-group-item" data-toggle="collapse" data-parent="#accordion"
+                               href="#{{ i.friend_id }}" style="display:block;">
+                                <img class="img-circle" src="{{ i.friend_user1.headprotrait }}" width="50"
+                                     height="50">
+                                <span>{{ i.friend_user1.nickname }}</span>
+                            </a>
+                            {% endif %}
+                        </h4>
+                    </div>
+                    <div id="{{ i.friend_id }}" class="panel-collapse collapse">
+                        <div class="panel-body list-group-item">
+                            {% if i.friend_user1.username == request.session.musicuser.username %}
+                            <p class="text-center"><a href="{% url 'del_attention' i.friend_user2.users_id %}" class="btn btn-success">取消关注</a></p>
+                            {% else %}
+                            <p class="text-center"><a href="{% url 'del_attention' i.friend_user1.users_id %}" class="btn btn-success">取消关注</a></p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- footer -->
+<footer class="footer">
+    <div class="footer-inner">
+        <div class="footer-copyright">
+            <p>版权所有 SKY MUSIC</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

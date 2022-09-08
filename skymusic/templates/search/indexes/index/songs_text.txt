@@ -1,0 +1,6 @@
+# 索引字段
+{{ object.songname }} # 歌名
+{{ object.singername }} # 歌手
+{{ object.songlanguages }} # 歌曲语言
+{{ object.songsource }} # 歌曲来源
+{{ object.songtype.songsortname }} # 歌曲类别

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="/static/css/reset.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css" type="text/css"/>
+    <script src="/static/bootstrap/js/jquery.min.js"></script>
+	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body >
+
+<header class="header" style="height:90px">
+    <div class="header-container">
+        <div class="header-top">
+            <a href="{% url 'index' 1 %}" class="logo"></a>
+            <nav class="header-nav">
+                <ul>
+                    <li><a href="{% url 'index' 1 %}">音乐馆</a></li>
+                    <li><a href="{% url 'myuser' %}" class="header-nav__cur">我的音乐</a></li>
+                    {% if request.session.musicuser.musicsinger %}
+                        <li><a href="{% url 'musicsingerindex' request.session.musicuser.users_id %}">音乐人</a></li>
+                    {% endif %}
+                    {% if request.session.musicuser %}
+                        <li><a href="{% url 'friend' request.session.musicuser.users_id %}">好友</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <div class="header-search">
+                <form method="get" action="{% url 'search' %}">
+                    <input type="text" name="q" class="text" value="{{ query }}" placeholder="歌手/歌曲">
+                    <div class="btn"><button type="submit"><i class="icon-sprite"></i></button></div>
+                </form>
+            </div>
+            <div class="header-login">
+                <ul class="nav nav-pills">
+                    <li class="dropdown">
+                        {% if request.session.musicuser %}
+                        <a class="dropdown-toggle" data-toggle="dropdown">
+                            <h5>
+                                <svg viewBox="0 0 8 8"
+                                     width="8px"
+                                     height="8px">
+                                    <circle cx="4"
+                                            cy="4"
+                                            r="4"
+                                            fill="#00ff00"
+                                    ></circle>
+                                </svg>
+                                {{ request.session.musicuser.nickname }}<span class="caret"></span>
+                            </h5>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h5 class="text-center">{{ request.session.musicuser.username }}</h5></li>
+                            <li class="text-center"><img src="{{ request.session.musicuser.headprotrait }}" class="img-circle" width="70" height="70"></li>
+                            <li class="divider"></li>
+                            <li><a href="{% url 'useredit' request.session.musicuser.users_id %}"><h5>修改个人信息</h5></a></li>
+                            {% if request.session.musicuser.musicsinger %}
+                                <li><a href="{% url 'musicsingerinfo' request.session.musicuser.users_id %}"><h5>修改音乐人信息</h5></a></li>
+                            {% else %}
+                                <li><a href="{% url 'musicsinger' request.session.musicuser.users_id %}"><h5>成为音乐人</h5></a></li>
+                            {% endif %}
+                            <li><a href="{% url 'logout' %}"><h5>退出登录</h5></a></li>
+                        </ul>
+                        {% else %}
+                        <a class="dropdown-toggle" href="{% url 'login' %}">
+                            <h5>登录/注册</h5>
+                        </a>
+                        {% endif %}
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4" style="border-bottom:1px solid #D7D7D7;border-top:1px solid #D7D7D7;float: none;margin-left: auto;margin-right: auto;background-color:#FCFCFC;">
+            <div class="login-box switch_box" style="display:bloc0k;">
+                <h3 class="text-center">用户信息修改</h3><br>
+                <p class="text-center" style="color:red;height:15px">{{ info }}</p>
+                <form class="form-horizontal" action="{% url 'douseredit' request.session.musicuser.users_id %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="control-label col-md-3">用户名:</label>
+                        <div class="col-md-9">
+                            <input type="text" name="username" value="{{ ob.username }}" class="form-control"
+                                   placeholder="用户名">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">昵称:</label>
+                        <div class="col-md-9">
+                            <input type="text" name="nickname" value="{{ ob.nickname }}" class="form-control"
+                                   placeholder="昵称">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">头像:</label>
+                        <div class="col-md-2">
+                            <img src="{{ ob.headprotrait }}" id="show" width="55" height="55">
+                        </div>
+                        <div class="col-md-7">
+                            <br>
+                            <input id="file" type="file" name="headprotrait" class="btn btn-primary form-control"
+                                   onchange="changepic(this)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">性别:</label>
+                        <div class="col-md-9">
+                            <label class="radio-inline">
+                                <input type="radio" value="男" name="sex" {% if ob.sex == '男' %}checked{% endif %}/> 男
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" value="女" name="sex" {% if ob.sex == '女' %}checked{% endif %}/> 女
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">修改密码:</label>
+                        <div class="col-md-9">
+                            <input type="password" class="form-control"  name="password" placeholder="请输入修改密码(选填)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="">
+                            <input class="btn btn-primary btn-block btn-flat" type="submit" value="确认修改"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="footer" style="position:absolute;bottom:0;width:100%;height:90px;">
+    <div class="footer-inner">
+        <div class="footer-copyright">
+            <p>版权所有 SKY MUSIC</p>
+        </div>
+    </div>
+</footer>
+<script>
+    function updateCode(ths) {
+        ths.src = ths.src + '?'
+    }
+    function changepic() {
+        var reads= new FileReader();
+        f=document.getElementById('file').files[0];
+        reads.readAsDataURL(f);
+        reads.onload=function (e) {
+            document.getElementById('show').src=this.result;
+        };
+    }
+	$(function () { $("[data-toggle='tooltip']").tooltip(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link type="text/css" rel="stylesheet" href="{% static 'css/common.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'css/play.css' %}">
+    <link rel="stylesheet" href="/static/css/reset.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css" type="text/css"/>
+
+</head>
+<body >
+
+<header class="header" style="height:90px">
+    <div class="header-container">
+        <div class="header-top">
+            <a href="{% url 'index' 1 %}" class="logo"></a>
+            <nav class="header-nav">
+                <ul>
+                    <li><a href="{% url 'index' 1 %}">音乐馆</a></li>
+                    <li><a href="{% url 'myuser' %}" class="header-nav__cur">我的音乐</a></li>
+                    {% if request.session.musicuser.musicsinger %}
+                        <li><a href="{% url 'musicsingerindex' request.session.musicuser.users_id %}">音乐人</a></li>
+                    {% endif %}
+                    {% if request.session.musicuser %}
+                        <li><a href="{% url 'friend' request.session.musicuser.users_id %}">好友</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <div class="header-search">
+                <form method="get" action="{% url 'search' %}">
+                    <input type="text" name="q" class="text" value="{{ query }}" placeholder="歌手/歌曲">
+                    <div class="btn"><button type="submit"><i class="icon-sprite"></i></button></div>
+                </form>
+            </div>
+            <div class="header-login">
+                <a href="{% url 'login' %}" class="login">登录</a>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container-fluid">
+    <div class="row" style="background: url('/static/images/123.jpg') ;height:570px">
+        <br><br><br><br>
+        <h1 class="text-center" style="color:white">用心留住感动</h1><br><br><br>
+        <p class="text-center"><a  href="{% url 'login' %}" class="btn btn-success btn-lg">立即登录</a></p>
+    </div>
+</div>
+<footer class="footer" style="position:absolute;bottom:0;width:100%;height:90px;">
+    <div class="footer-inner">
+        <div class="footer-copyright">
+            <p>版权所有 SKY MUSIC</p>
+        </div>
+    </div>
+</footer>
+<script>
+function updateCode(ths) {
+        ths.src = ths.src + '?'
+    }
+</script>
+</body>
+</html>

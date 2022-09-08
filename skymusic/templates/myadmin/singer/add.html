@@ -1,0 +1,87 @@
+{% extends 'myadmin/admin-base.html' %}
+
+{% block main_body %}
+<form class="form-horizontal" role="form" action="{% url 'myadmin_singer_insert' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <br>
+        <div class="form-group">
+            <label class="control-label col-md-2">歌手名字:</label>
+            <div class="col-md-6">
+                <input type="text" name="singername" class="form-control" placeholder="请输入歌手名字">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">性别:</label>
+            <div class="col-md-6">
+                <label class="radio-inline">
+                    <input type="radio" value="男" name="sex" checked/> 男
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" value="女" name="sex"/> 女
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">歌手图:</label>
+            <div class="col-md-6">
+                <div class="col-md-3">
+                    <img src="/static/images/singer.jpg" class="img-circle" name="" id="show" width="100" height="100">
+                </div>
+                <div class="col-md-6">
+                    <br><br><br>
+                    <button class="btn btn-primary">
+                        <input id="file" name="singerpicture" onchange="changepic(this)" type="file">
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">歌手类别:</label>
+            <div class="col-md-6">
+                {% for i in singersortlist %}
+                    <label class="radio-inline">
+                        <input type="radio" value="{{ i.singersortname }}" name="singersortname" /> {{ i.singersortname }}
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">英文名:</label>
+            <div class="col-md-6">
+                <input type="text" name="englishname" class="form-control" placeholder="请输入歌手英文名">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">国籍:</label>
+            <div class="col-md-6">
+                <input type="text" name="nationality" class="form-control" placeholder="请输入歌手国籍">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">出生地:</label>
+            <div class="col-md-6">
+                <input type="text" name="birthplace" class="form-control" placeholder="请输入歌手出生地">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">出生日期:</label>
+            <div class="col-md-6">
+                <input type="date" name="birthdate" class="form-control" placeholder="请输入歌手出生日期">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">个人简介:</label>
+            <div class="col-md-6">
+                <input type="text" name="personalintroduction" class="form-control" placeholder="请输入歌手个人简历">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-ma-2 col-md-offset-4">
+                <button type="submit" class="btn btn-primary">添加</button> &nbsp;
+                <button type="reset" class="btn btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'myadmin/admin-base.html' %}
+
+{% block main_body %}
+<section>
+    <div>
+        <br>
+        <form action="{% url 'myadmin_user_index' 1 %}" method="get">
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="key" placeholder="账号/昵称">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <table class="table table-bordered table-striped table-hover table-condensed">
+        <tr class="info">
+            <th>ID</th>
+            <th>用户名</th>
+            <th>昵称</th>
+            <th>头像</th>
+            <th>性别</th>
+            <th>账号状态</th>
+            <th>添加时间</th>
+            <th>修改时间</th>
+            <th>操作</th>
+        </tr>
+        {% for vo in userlist %}
+        <tr class="active">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ vo.username }}</td>
+            <td>{{ vo.nickname }}</td>
+            <td>
+                <img src="{{ vo.headprotrait }}" class="img-circle" width="70" height="70">
+            </td>
+            <td>{{ vo.sex }}</td>
+            <td>
+                {% if vo.status == 1 %}
+                <span style="color:green">普通用户</span>
+                {% elif vo.status == 0 %}
+                <span style="color:red">管理员</span>
+                {% else %}
+                <span style="color:red">未知状态</span>
+                {% endif %}
+            </td>
+            <td>{{ vo.create_time|date:'Y年m月d日' }}</td>
+            <td>{{ vo.update_time|date:'Y年m月d日' }}</td>
+            <td>
+                <a type="button" href="{% url 'myadmin_user_edit' vo.users_id %}"
+                   class="btn btn-primary btn-sm">
+                    <span class="" aria-hidden="true"></span> 编辑
+                </a>
+                <a type="button" href="{% url 'myadmin_user_delete' vo.users_id %}"
+                   class="btn btn-primary btn-sm">
+                    <span class="" aria-hidden="true"></span> 删除
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="row">
+        <div class="col-md-4">
+            <a class="btn btn-success" role="button" href="{% url 'myadmin_user_add' %}">
+                <span aria-hidden="true">添加用户</span>
+            </a>
+        </div>
+        <div class="col-md-8">
+            <ul class="pagination ">
+                <li><a href="{% url 'myadmin_user_index' pindex|add:-1 %}?{{mywhere|join:'&'}}">&laquo;</a></li>
+                {% for p in plist %}
+                <li {% if p == pindex %} class="active" {% endif %}>
+                    <a href="{% url 'myadmin_user_index' p %}?{{mywhere|join:'&'}}">{{p}}</a>
+                </li>
+                {% endfor %}
+                <li><a href="{% url 'myadmin_user_index' pindex|add:1 %}?{{mywhere|join:'&'}}">&raquo;</a></li>
+            </ul>
+        </div>
+    </div>
+</section>
+{% endblock %}

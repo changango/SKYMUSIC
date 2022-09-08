@@ -1,0 +1,61 @@
+{% extends 'myadmin/admin-base.html' %}
+
+{% block main_body %}
+<section>
+    <div>
+        <br>
+        <form action="{% url 'myadmin_singerssort_index' 1 %}" method="get">
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="key" placeholder="歌曲/歌手">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <table class="table table-bordered table-striped table-hover table-condensed">
+        <tr class="info">
+            <th>ID</th>
+            <th>歌名</th>
+            <th>操作</th>
+        </tr>
+        </tr>
+        {% for vo in singersortlist %}
+        <tr class="active">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ vo.singersortname }}</td>
+            <td>
+                <a type="button" href="{% url 'myadmin_singerssort_edit' vo.singersort_id %}"
+                   class="btn btn-primary btn-sm">
+                    <span class="" aria-hidden="true"></span> 编辑
+                </a>
+                <a type="button" href="{% url 'myadmin_singerssort_delete' vo.singersort_id %}"
+                   class="btn btn-primary btn-sm">
+                    <span class="" aria-hidden="true"></span> 删除
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="row">
+        <div class="col-md-4">
+            <a class="btn btn-success" role="button" href="{% url 'myadmin_singerssort_add' %}">
+                <span aria-hidden="true">添加类别</span>
+            </a>
+        </div>
+        <div class="col-md-8">
+            <ul class="pagination ">
+                <li><a href="{% url 'myadmin_singerssort_index' pindex|add:-1 %}?{{mywhere|join:'&'}}">&laquo;</a></li>
+                {% for p in plist %}
+                <li {% if p == pindex %} class="active" {% endif %}>
+                    <a href="{% url 'myadmin_singerssort_index' p %}?{{mywhere|join:'&'}}">{{p}}</a>
+                </li>
+                {% endfor %}
+                <li><a href="{% url 'myadmin_singerssort_index' pindex|add:1 %}?{{mywhere|join:'&'}}">&raquo;</a></li>
+            </ul>
+        </div>
+    </div>
+</section>
+{% endblock %}

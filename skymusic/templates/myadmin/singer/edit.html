@@ -1,0 +1,83 @@
+{% extends 'myadmin/admin-base.html' %}
+
+{% block main_body %}
+<form class="form-horizontal" role="form" action="{% url 'myadmin_singer_update' singer.singers_id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <br>
+        <div class="form-group">
+            <label class="control-label col-md-2">歌手名:</label>
+            <div class="col-md-6">
+                <input type="text" name="singername" value="{{ singer.singername }}" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">性别:</label>
+            <div class="col-md-6">
+                <label class="radio-inline">
+                    <input type="radio" name="sex" class="" value="男" {% if singer.sex == '男' %} checked {% endif %}/> 男
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="sex" class="" value="女" {% if singer.sex == '女' %} checked {% endif %}/> 女
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">歌手分类:</label>
+            <div class="col-md-6">
+                {% for i in singersortlist %}
+                <label class="radio-inline">
+                    <input type="radio" value="{{ i.singersortname }}" name="singersortname" {% if i.singersortname == ssn %} checked {% endif %}/>{{ i.singersortname }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">歌手图:</label>
+            <div class="col-md-3">
+                <img src="{{ singer.singerpicture }}" id="show" width="75" height="75">
+            </div>
+            <div class="col-md-3">
+                <br><br>
+                <input id="file" type="file" name="singerpicture" class="btn btn-primary form-control"
+                       onchange="changepic(this)">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">英文名:</label>
+            <div class="col-md-6">
+                <input type="text" name="englishname" value="{{ singer.englishname }}" class="form-control" >
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">国籍:</label>
+            <div class="col-md-6">
+                <input type="text" name="nationality" value="{{ singer.nationality }}" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">出生地:</label>
+            <div class="col-md-6">
+                <input type="text" name="birthplace" value="{{ singer.birthplace }}" class="form-control" >
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">出生日期:</label>
+            <div class="col-md-6">
+                <input type="date" name="birthdate" value="{{ singer.birthdate|date:'Y-m-d' }}" class="form-control" >
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">歌手个人简介:</label>
+            <div class="col-md-6">
+                <input type="text" name="personalintroduction" value="{{ singer.personalintroduction }}" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-ma-2 col-md-offset-4">
+                <button type="submit" class="btn btn-primary">确认修改</button> &nbsp;
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

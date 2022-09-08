@@ -1,0 +1,74 @@
+{% extends 'myadmin/admin-base.html' %}
+
+{% block main_body %}
+<section>
+    <div>
+        <br>
+        <form action="{% url 'myadmin_song_index' 1 %}" method="get">
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="key" placeholder="歌曲/歌手">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary" type="submit">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <table class="table table-bordered table-striped table-hover table-condensed">
+        <tr class="info">
+            <th>ID</th>
+            <th>歌名</th>
+            <th>歌手</th>
+            <th>语言</th>
+            <th>歌曲来源分类</th>
+            <th>歌曲图</th>
+            <th>歌曲位置</th>
+            <th>歌曲文件</th>
+            <th>发行时间</th>
+            <th>操作</th>
+        </tr>
+        </tr>
+        {% for vo in songlist %}
+        <tr class="active">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ vo.songname }}</td>
+            <td>{{ vo.singername }}</td>
+
+            <td>{{ vo.songlanguages }}</td>
+            <td>{{ vo.songsource }}</td>
+            <!--
+            <td>
+            </td>-->
+            <td>
+                <img src="{{ vo.songpicture }}" class="img-circle" width="70" height="70">
+            </td>
+            <td>{{ vo.songfile }}</td>
+            <td>{{ vo.songlyrics }}</td>
+            <td>{{ vo.releasetime|date:'Y年m月d日' }}</td>
+            <td>
+                <a type="button" href="{% url 'myadmin_song_edit' vo.songs_id %}"
+                   class="btn btn-primary btn-sm">
+                    <span class="" aria-hidden="true"></span> 编辑
+                </a>
+                <a type="button" href="{% url 'myadmin_song_delete' vo.songs_id %}"
+                   class="btn btn-primary btn-sm">
+                    <span class="" aria-hidden="true"></span> 删除
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="row">
+        <ul class="pagination" style="display:table;text-align:center;margin:0 auto;">
+            <li><a href="{% url 'myadmin_song_index' pindex|add:-1 %}?{{mywhere|join:'&'}}">&laquo;</a></li>
+            {% for p in plist %}
+            <li {% if p == pindex %} class="active" {% endif %}>
+                <a href="{% url 'myadmin_song_index' p %}?{{mywhere|join:'&'}}">{{p}}</a>
+            </li>
+            {% endfor %}
+            <li><a href="{% url 'myadmin_song_index' pindex|add:1 %}?{{mywhere|join:'&'}}">&raquo;</a></li>
+        </ul>
+    </div>
+</section>
+{% endblock %}

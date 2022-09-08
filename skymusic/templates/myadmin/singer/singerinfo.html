@@ -1,0 +1,83 @@
+{% extends 'myadmin/admin-base.html' %}
+
+{% block main_body %}
+<section>
+    <div>
+        <br>
+        <form action="{% url 'myadmin_singer_index' 1 %}" method="get">
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="key" placeholder="歌曲/歌手">
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-primary" type="submit">搜索</button>
+                </div>
+                <div class="col-md-8">
+                    <p class="text-right">
+                        <a class="btn btn-success" role="button" href="{% url 'myadmin_song_add' singer.singers_id %}">
+                            <span aria-hidden="true">添加歌曲</span>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </form>
+    </div>
+    <br>
+    <div class="container-fluid">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="{{ singer.singerpicture }}" alt="{{ singer.singername }}" class="img-circle" width="300"
+                         height="300">
+                </div>
+                <div class="col-md-8">
+                    <h1>{{ singer.singername }}</h1>
+                    <p>性别:{{ singer.sex }}</p>
+                    <p>英文名:{{ singer.englishname }}</p>
+                    <p>国籍:{{ singer.nationality }}</p>
+                    <p>出生地:{{ singer.birthplace }}</p>
+                    <p>出生日期:{{ singer.birthdate }}</p>
+                    <p>歌手简介:{{ singer.personalintroduction }}</p>
+                </div>
+            </div>
+            <br><br>
+            <div class="row">
+                <table class="table table-hover ">
+                    <caption><h2>歌曲列表({{ number }}首)</h2></caption>
+                    <thead>
+                    <tr class="success">
+                        <th width="50">序号</th>
+                        <th>歌曲</th>
+                        <th>发布时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in song %}
+                    <a>
+                        <tr class="info" onclick="location.href='{% url 'musicplayer' i.songs_id %}';">
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ i.songname }}</td>
+                            <td>{{ i.releasetime|date:'Y年m月d日' }}</td>
+                            <td>
+                                <a type="button" href="{% url 'myadmin_song_edit' i.songs_id %}"
+                                   class="btn btn-primary btn-sm">
+                                    <span class="" aria-hidden="true"></span> 编辑
+                                </a>
+                                <a type="button" href="{% url 'myadmin_song_delete' i.songs_id %}"
+                                   class="btn btn-primary btn-sm">
+                                    <span class="" aria-hidden="true"></span> 删除
+                                </a>
+                            </td>
+                        </tr>
+                    </a>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}
